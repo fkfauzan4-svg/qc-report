@@ -7,6 +7,7 @@ import mimetypes
 import os
 import re
 
+import anthropic
 from anthropic import Anthropic
 
 MODEL = os.environ.get("ANTHROPIC_MODEL", "claude-sonnet-5")
@@ -183,12 +184,29 @@ def analyze_drawing(filename: str, content_type: str, data: bytes, extracted_tex
         user_content.append(file_block)
         user_content.append({"type": "text", "text": USER_INSTRUCTION})
 
-    response = client.messages.create(
-        model=MODEL,
-        max_tokens=MAX_TOKENS,
-        system=SYSTEM_PROMPT,
-        messages=[{"role": "user", "content": user_content}],
-    )
+    try:
+        response = client.messages.create(
+            model=MODEL,
+            max_tokens=MAX_TOKENS,
+            system=SYSTEM_PROMPT,
+            messages=[{"role": "user", "content": user_content}],
+        )
+    except anthropic.AuthenticationError as exc:
+        raise RuntimeError("Anthropic API key was rejected. Check ANTHROPIC_API_KEY.") from exc
+    except anthropic.PermissionDeniedError as exc:
+        raise RuntimeError("Anthropic API key does not have permission for this request.") from exc
+    except anthropic.RateLimitError as exc:
+        raise RuntimeError("Anthropic API rate limit reached. Try again shortly.") from exc
+    except anthropic.APIStatusError as exc:
+        message = getattr(exc, "message", None) or str(exc)
+        if "credit balance" in message.lower():
+            raise RuntimeError(
+                "The configured Anthropic account has insufficient credits. "
+                "Add credits in the Anthropic console, then retry."
+            ) from exc
+        raise RuntimeError(f"Anthropic API request failed: {message}") from exc
+    except anthropic.APIConnectionError as exc:
+        raise RuntimeError(f"Could not reach the Anthropic API: {exc}") from exc
 
     text_parts = [block.text for block in response.content if getattr(block, "type", None) == "text"]
     raw_text = "\n".join(text_parts)
