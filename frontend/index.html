@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Drawing to BOM &amp; Cost Estimator</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%232c3e50'/%3E%3Ctext x='50' y='62' font-size='34' font-family='Arial' font-weight='bold' fill='%23ca6f1e' text-anchor='middle'%3EBOM%3C/text%3E%3C/svg%3E" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="app-header no-print">
+    <div class="brand">
+      <span class="brand-mark">BOM</span>
+      <div>
+        <h1>Drawing → BOM &amp; Cost Estimator</h1>
+        <p>Upload a drawing. Review the extracted bill of materials. Export or print the estimate.</p>
+      </div>
+    </div>
+  </header>
+
+  <main id="app">
+
+    <!-- ===================== UPLOAD VIEW ===================== -->
+    <section id="view-upload" class="view">
+      <div class="card upload-card">
+        <div id="dropzone" class="dropzone">
+          <svg viewBox="0 0 24 24" width="42" height="42" aria-hidden="true"><path fill="currentColor" d="M12 3l5 5h-3v6h-4V8H7l5-5zM5 18h14v2H5z"/></svg>
+          <p><strong>Drag &amp; drop</strong> a drawing here, or click to choose a file</p>
+          <p class="hint">PDF, PNG/JPG/WEBP images, or Excel/CSV (.xlsx, .xls, .csv) — up to 20 MB</p>
+          <input id="file-input" type="file" accept=".pdf,.png,.jpg,.jpeg,.webp,.gif,.xlsx,.xls,.xlsm,.csv,.tsv" hidden />
+        </div>
+        <div id="file-chosen" class="file-chosen hidden">
+          <span id="file-chosen-name"></span>
+          <button id="btn-analyze" class="btn btn-primary">Analyze Drawing</button>
+          <button id="btn-clear-file" class="btn btn-ghost">Change file</button>
+        </div>
+        <p id="upload-error" class="error-text hidden"></p>
+      </div>
+    </section>
+
+    <!-- ===================== LOADING VIEW ===================== -->
+    <section id="view-loading" class="view hidden">
+      <div class="card loading-card">
+        <div class="spinner" aria-hidden="true"></div>
+        <p>Analyzing drawing and building the bill of materials…</p>
+        <p class="hint">This calls Claude's vision model to read the drawing — usually 10–40 seconds.</p>
+      </div>
+    </section>
+
+    <!-- ===================== RESULTS VIEW ===================== -->
+    <section id="view-results" class="view hidden">
+
+      <div class="toolbar no-print">
+        <button id="btn-new" class="btn btn-ghost">↺ New Analysis</button>
+        <div class="toolbar-actions">
+          <button id="btn-print" class="btn btn-secondary">🖨 Print</button>
+          <button id="btn-download" class="btn btn-primary">⬇ Download Excel</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="section-title">Project Information</h2>
+        <div id="project-fields" class="project-grid"></div>
+      </div>
+
+      <div class="card">
+        <div class="section-header">
+          <h2 class="section-title">Commercial BOQ &amp; Quotation</h2>
+          <button class="btn btn-small no-print" data-add="items">+ Add item</button>
+        </div>
+        <div class="table-scroll">
+          <table id="table-items" class="data-table"></table>
+        </div>
+        <div class="totals-box">
+          <div><span>Subtotal (excl. VAT)</span><strong id="total-subtotal">0.00</strong></div>
+          <div><span id="vat-label">VAT</span><strong id="total-vat">0.00</strong></div>
+          <div class="grand"><span>Grand Total (incl. VAT)</span><strong id="total-grand">0.00</strong></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-header">
+          <h2 class="section-title">Detailed BOM Breakdown</h2>
+          <button class="btn btn-small no-print" data-add="bom">+ Add part</button>
+        </div>
+        <div class="table-scroll">
+          <table id="table-bom" class="data-table"></table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-header">
+          <h2 class="section-title">Hardware &amp; Accessories Schedule</h2>
+          <button class="btn btn-small no-print" data-add="hardware">+ Add hardware</button>
+        </div>
+        <p class="hint">Reference breakdown for production planning — already included in each item's unit price above, not added to the grand total.</p>
+        <div class="table-scroll">
+          <table id="table-hardware" class="data-table"></table>
+        </div>
+        <div class="totals-box">
+          <div><span>Hardware &amp; accessories total (informational)</span><strong id="total-hardware">0.00</strong></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-header">
+          <h2 class="section-title">Assumptions &amp; Notes from Automated Analysis</h2>
+          <button class="btn btn-small no-print" data-add="assumptions">+ Add note</button>
+        </div>
+        <ul id="assumptions-list" class="assumptions-list"></ul>
+      </div>
+
+    </section>
+
+    <p id="global-error" class="error-text hidden card"></p>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,159 @@
+:root {
+  --slate: #2c3e50;
+  --slate-dark: #1c2833;
+  --amber: #ca6f1e;
+  --amber-light: #fcf3cf;
+  --grey-bg: #f4f6f7;
+  --grey-border: #bdc3c7;
+  --grey-section: #eaedee;
+  --text: #212f3d;
+  --red: #943126;
+  --green: #196f3d;
+  font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--grey-bg);
+  color: var(--text);
+}
+
+.app-header {
+  background: var(--slate);
+  color: #fff;
+  padding: 20px 24px;
+}
+.brand { display: flex; align-items: center; gap: 14px; max-width: 1100px; margin: 0 auto; }
+.brand-mark {
+  background: var(--amber);
+  color: #fff;
+  font-weight: 700;
+  font-size: 13px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  letter-spacing: 0.5px;
+}
+.app-header h1 { font-size: 20px; margin: 0; }
+.app-header p { margin: 2px 0 0; font-size: 13px; color: #d5dbdb; }
+
+main#app { max-width: 1100px; margin: 24px auto 60px; padding: 0 16px; }
+
+.card {
+  background: #fff;
+  border: 1px solid var(--grey-border);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+
+.section-title { font-size: 16px; color: var(--slate); margin: 0 0 12px; }
+.section-header { display: flex; align-items: center; justify-content: space-between; }
+.section-header .section-title { margin: 0; }
+
+.hidden { display: none !important; }
+
+/* ---------- Upload ---------- */
+.upload-card { text-align: center; }
+.dropzone {
+  border: 2px dashed var(--grey-border);
+  border-radius: 10px;
+  padding: 48px 20px;
+  cursor: pointer;
+  color: var(--slate);
+  transition: border-color 0.15s, background 0.15s;
+}
+.dropzone:hover, .dropzone.dragover { border-color: var(--amber); background: #fffaf0; }
+.dropzone .hint { color: #7b8a8b; font-size: 13px; }
+.file-chosen { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 16px; flex-wrap: wrap; }
+.file-chosen span { font-weight: 600; }
+
+/* ---------- Loading ---------- */
+.loading-card { text-align: center; padding: 60px 20px; }
+.spinner {
+  width: 42px; height: 42px; margin: 0 auto 18px;
+  border: 4px solid var(--grey-section);
+  border-top-color: var(--amber);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ---------- Buttons ---------- */
+.btn {
+  border: 1px solid var(--grey-border);
+  background: #fff;
+  color: var(--text);
+  padding: 9px 16px;
+  border-radius: 7px;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.btn:hover { background: var(--grey-section); }
+.btn-primary { background: var(--slate); color: #fff; border-color: var(--slate); }
+.btn-primary:hover { background: var(--slate-dark); }
+.btn-secondary { background: var(--amber); color: #fff; border-color: var(--amber); }
+.btn-secondary:hover { filter: brightness(0.93); }
+.btn-ghost { background: transparent; }
+.btn-small { padding: 5px 10px; font-size: 12px; }
+
+.toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.toolbar-actions { display: flex; gap: 10px; }
+
+/* ---------- Project fields ---------- */
+.project-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+.field label { display: block; font-size: 12px; font-weight: 700; color: var(--slate); margin-bottom: 4px; }
+.field input, .field textarea {
+  width: 100%; padding: 8px 10px; border: 1px solid var(--grey-border); border-radius: 6px; font-size: 14px;
+  font-family: inherit;
+}
+.field.full { grid-column: 1 / -1; }
+
+/* ---------- Tables ---------- */
+.table-scroll { overflow-x: auto; }
+table.data-table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 640px; }
+table.data-table th {
+  background: var(--slate); color: #fff; text-align: left; padding: 8px 10px; font-size: 12px;
+  position: sticky; top: 0;
+}
+table.data-table td { padding: 6px 8px; border-bottom: 1px solid var(--grey-section); vertical-align: top; }
+table.data-table tr:hover td { background: #fbfcfc; }
+table.data-table input, table.data-table textarea {
+  width: 100%; border: 1px solid transparent; background: transparent; padding: 4px 6px; border-radius: 4px;
+  font-size: 13px; font-family: inherit; color: var(--text);
+}
+table.data-table input:hover, table.data-table textarea:hover,
+table.data-table input:focus, table.data-table textarea:focus {
+  border-color: var(--grey-border); background: #fff;
+}
+table.data-table input.num { text-align: right; color: #0000ee; font-weight: 600; }
+table.data-table td.col-total { font-weight: 700; text-align: right; white-space: nowrap; }
+table.data-table td.col-remove { text-align: center; width: 30px; }
+.row-remove-btn { background: none; border: none; color: var(--red); font-size: 16px; cursor: pointer; }
+
+.totals-box { margin-top: 14px; display: flex; flex-direction: column; gap: 6px; max-width: 420px; margin-left: auto; }
+.totals-box > div { display: flex; justify-content: space-between; font-size: 14px; padding: 4px 0; }
+.totals-box .grand { border-top: 2px solid var(--slate); margin-top: 4px; padding-top: 8px; font-size: 16px; }
+.totals-box .grand strong { color: var(--amber); }
+
+.assumptions-list { padding-left: 0; list-style: none; margin: 0; display: flex; flex-direction: column; gap: 6px; }
+.assumptions-list li { display: flex; gap: 8px; align-items: flex-start; font-size: 13px; }
+.assumptions-list li input { flex: 1; border: 1px solid var(--grey-border); border-radius: 4px; padding: 5px 8px; font-family: inherit; }
+
+.hint { color: #7b8a8b; font-size: 12px; margin: 4px 0 0; }
+.error-text { color: var(--red); background: #fadbd8; border: 1px solid #f1948a; border-radius: 8px; padding: 12px 16px; font-size: 14px; }
+
+/* ---------- Print ---------- */
+@media print {
+  @page { size: A4 landscape; margin: 10mm; }
+  .no-print, .app-header, .row-remove-btn, [data-add] { display: none !important; }
+  body { background: #fff; }
+  main#app { margin: 0; max-width: none; padding: 0; }
+  .card { box-shadow: none; border: none; page-break-inside: avoid; margin-bottom: 14px; }
+  table.data-table { font-size: 11px; min-width: 0; }
+  table.data-table input, table.data-table textarea { border: none; color: var(--text) !important; min-width: 0 !important; }
+  table.data-table input.num { color: var(--text) !important; }
+}
